@@ -1,14 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
     <Block>
-      <Logo src="https://i.ibb.co/nQCJHJq/Free-Sample-By-Wix-11zon-removebg-preview.png" alt="마이비어" />
+      <Link to={`/`}>
+        <Logo src="https://i.ibb.co/nQCJHJq/Free-Sample-By-Wix-11zon-removebg-preview.png" alt="logo" />
+      </Link>
       <SearchIput type="text" />
 
       <NavList>
-        <NavItem as="a" href="/">찜 맥주</NavItem>
+        <NavItem as="a" href="/like">찜 맥주</NavItem>
         <NavItem as="a" href="/">프로필</NavItem>
         <NavItem as="a" href="/">로그인</NavItem>
       </NavList>
@@ -18,6 +21,7 @@ function Header() {
 
 const Block = styled.header`
   display: flex;
+  width: 100%;
   height: 70px;
   align-items: center;
   background-color: #FFE4E1;
@@ -28,7 +32,7 @@ const Block = styled.header`
 `;
 
 const Logo = styled.img`
-width: 200px;
+width: 160px;
 object-fit: contain;
 margin: 0 10px;
 `;
