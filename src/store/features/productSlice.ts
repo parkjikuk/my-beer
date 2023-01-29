@@ -1,5 +1,4 @@
-import { PayloadAction } from '@reduxjs/toolkit/dist/createAction';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { db } from './../../firebase/firebase';
 import { collection } from 'firebase/firestore';
 import { getDocs } from 'firebase/firestore';
@@ -7,32 +6,34 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const productRef = collection(db, "product");
 
-export interface Product{
+export interface ProductItems{
   image: string;
   name: string;
 }
 
 interface ProductState {
-  data: Product[] | null;
+  data: ProductItems[];
 }
 
-const initialState = {
-  data: null,
-} as ProductState
+const initialState: ProductState = {
+  data: [],
+} 
 
 export const fetchData = createAsyncThunk(
   'productSlice/fetchData',
   async () => {
     const querySnapshot = await getDocs(productRef);
+    const items: ProductItems[] = [];
     querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      return data;
+      const beerData = doc.data();
+      items.push({image: beerData.image, name:beerData.name})
     })
+    return items;
   }
 )
 
 const productSlice = createSlice({
-  name: 'productSlice',
+  name: 'beer',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
