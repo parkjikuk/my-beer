@@ -1,9 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
+import { panelActive } from '../pages/Login';
 
-interface panelActive {
-  panelActive: boolean;
-}
 function Signin({panelActive}: panelActive) {
   return (
     <Container panelActive={panelActive}>
@@ -29,10 +26,9 @@ top: 0;
 transition: all 0.6s ease-in-out;
 opacity: ${props => props.panelActive ? '0' : '1'};
 transform: ${props=> props.panelActive ? 'translateX(100%)' : null };
-
 `;
 
-const Form = styled.form`
+export const Form = styled.form`
 display: flex;
 flex-direction: column;
 text-align: center;
@@ -42,7 +38,7 @@ padding: 0 40px;
 height: 100%;
 `;
 
-const FormTitle = styled.h2`
+export const FormTitle = styled.h2`
 font-weight: 300;
 margin: 0;
 margin-bottom: 1.25rem;

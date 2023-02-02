@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Btn } from './Signin';
-
-interface stateProps {
-  panelActive: boolean;
-}
+import { panelActive } from '../pages/Login';
 
 interface Props {
   panelActive: boolean;
@@ -30,7 +27,7 @@ function Overlay({signInBtn , signUpBtn, panelActive} : Props) {
   );
 }
 
-const Container = styled.div<stateProps>`
+const Container = styled.div<panelActive>`
 height: 100%;
 left: 50%;
 overflow: hidden;
@@ -42,7 +39,7 @@ z-index: 100;
 transform: ${props=> props.panelActive ? 'translateX(-100%)' : null };
 `;
 
-const OverlayWrapper = styled.div<stateProps>`
+const OverlayWrapper = styled.div<panelActive>`
 background: url("https://cdn.pixabay.com/photo/2018/09/29/16/22/beer-3711733_960_720.jpg");
 height: 100%;
 left: -100%;
@@ -70,11 +67,11 @@ transition: transform 0.6s ease-in-out;
 flex-direction: column;
 `;
 
-const OverlayLeft = styled(OverlayPanel)<stateProps>`
+const OverlayLeft = styled(OverlayPanel)<panelActive>`
 transform: ${props=> props.panelActive ? 'translateX(0)' : 'translateX(-20%)'};
 `;
 
-const OverlayRight = styled(OverlayPanel)<stateProps>`
+const OverlayRight = styled(OverlayPanel)<panelActive>`
 right: 0;
 transform: ${props=> props.panelActive ? 'translateX(20%)' : 'translateX(0)'};
 `;
