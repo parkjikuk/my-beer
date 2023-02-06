@@ -1,16 +1,53 @@
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { firebaseAuth } from '../firebase/firebase';
 import { panelActive } from '../pages/Login';
+import { useAppDispatch, useAppSeletor } from '../store/store';
 
 function Signin({panelActive}: panelActive) {
+  const dispatch = useAppDispatch();
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+
+  const loginHandler = (e: React.MouseEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const { email, password } = formValues;
+    signInWithEmailAndPassword(firebaseAuth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      console.log(user);
+      navigate("/");
+    })
+    .catch((error) => {
+      alert(error.massage)
+    })
+  }
+  
   return (
     <Container panelActive={panelActive}>
-      <Form>
+      <Form onSubmit={loginHandler}>
         <FormTitle>로그인</FormTitle>
 
-        <SigninInput placeholder='이메일'/>
-        <SigninInput placeholder='비밀번호'/>
+        <SigninInput 
+          placeholder='이메일' 
+          type='email' name='email' 
+          value={formValues.email} 
+          onChange={(e) => setFormValues({...formValues, [e.target.name]: e.target.value})}
+        />
+        <SigninInput 
+          placeholder='비밀번호' 
+          type='password' name='password' 
+          value={formValues.password} 
+          onChange={(e) => setFormValues({...formValues, [e.target.name]: e.target.value})}
+        />
 
-        <Btn>로그인</Btn>
+        <Btn type="submit">로그인</Btn>
       </Form>
     </Container>
   );
