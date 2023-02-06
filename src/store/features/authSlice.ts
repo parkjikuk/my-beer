@@ -1,15 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface AuthState {
-  displayName?: string | null;
   email?: string | null;
   authenticated?: boolean | null;
+  userName?: string | null;
+  userID?: string | null;
 }
 
 const initialState: AuthState = {
-  displayName: "",
-  email: "",
+  email: null,
   authenticated: false,
+  userName: null,
+  userID: null,
 }
 
 export const authSlice = createSlice({
@@ -17,10 +19,18 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.authenticated = action.payload;
+      console.log(action.payload);
+      const {email, userName, userID} = action.payload;
+      state.authenticated = true;
+      state.email = email;
+      state.userName = userName;
+      state.userID = userID;
     },
     logout: (state) => {
-      state.authenticated = null;
+      state.authenticated = false;
+      state.email = null;
+      state.userName = null;
+      state.userID = null;
     },
   }
 });
