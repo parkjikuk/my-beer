@@ -14,27 +14,32 @@ function FormInput({ value, onChange, ...inputProps}: IFormInput) {
   };
   
   return (
-    <>
+    <FormInputContainer>
       <SignupInput 
         {...inputProps} 
         className = {inputProps.errorMessage && focused ? "error" : ""}
         id={inputProps.id.toString()} 
         onChange={onChange} 
         onBlur={handleFocus}  
-        onFocus={() =>inputProps.name === "confirmPassword" && setFocused(true)} 
+        onFocus={() =>inputProps.name === "confirmPassword" && setFocused(true)}
       />
       {inputProps.errorMessage && focused && (
         <ErrorMsg>{inputProps.errorMessage}</ErrorMsg>
       )}
-    </>
+    </FormInputContainer>
   );
 }
 
+const FormInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
 
 const Input = styled.input`
 background-color: #fff;
 border: none;
-padding: 0.8rem 0.8rem;
+padding: 12px 0 12px 12px;
 margin: 10px 0;
 width: 100%;
 `;
@@ -51,7 +56,8 @@ const SignupInput = styled(Input)`
   ~ ${ErrorMsg} {
     display: block;
   }
-}`;
+}
+`;
 
 
 
