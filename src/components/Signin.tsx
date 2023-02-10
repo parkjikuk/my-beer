@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { firebaseAuth } from '../firebase/firebase';
 import { panelActive } from '../pages/Login';
-import { useAppDispatch, useAppSeletor } from '../store/store';
+import { authSlice } from '../store/features/authSlice';
+import { useAppDispatch } from '../store/store';
+import { toast } from 'react-toastify';
 
 function Signin({panelActive}: panelActive) {
   const dispatch = useAppDispatch();
@@ -21,11 +23,17 @@ function Signin({panelActive}: panelActive) {
     signInWithEmailAndPassword(firebaseAuth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
+      dispatch(authSlice.actions.login({
+        email: user.email,
+        userName: user.displayName,
+        userID: user.uid,
+      }))
+      toast.success("로그인 성공");
       console.log(user);
       navigate("/");
     })
     .catch((error) => {
-      alert(error.massage)
+      toast.error(error.massage);
     })
   }
   
@@ -101,7 +109,7 @@ font-weight: bold;
 padding: 0.9rem 4rem;
 transition: transform 80ms ease-in;
 border: none;
-margin-top: 20px;
+margin-top: 10px;
 &:active {
   transform: scale(0.95);
 };
