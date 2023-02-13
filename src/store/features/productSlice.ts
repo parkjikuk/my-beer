@@ -7,6 +7,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 const productRef = collection(db, "product");
 
 export interface ProductItems{
+  id: string;
   image: string;
   name: string;
 }
@@ -26,7 +27,8 @@ export const fetchData = createAsyncThunk(
     const items: ProductItems[] = [];
     querySnapshot.forEach((doc) => {
       const beerData = doc.data();
-      items.push({image: beerData.image, name:beerData.name})
+      items.push({id: doc.id, image: beerData.image, name:beerData.name})
+      console.log(beerData)
     })
     return items;
   }
