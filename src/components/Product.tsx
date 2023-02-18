@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { Link } from "react-router-dom";
 import { ProductItems } from '../store/features/productSlice';
+import { useAppSelector } from '../store/store';
+import axios from 'axios';
 
 function Product({data} : {data: ProductItems}) {
+  const email = useAppSelector((state) => state.auth.email);
+
+  const addToList = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/user/add", {
+        email,
+        data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   return (
     <Container>
         <ProductItem to={`/detail`}>
@@ -12,8 +28,8 @@ function Product({data} : {data: ProductItems}) {
         </ProductItem>
         <ProductInfo>
           <ProductTitle>{data.name}</ProductTitle>
-          <ProductLike>
-            <BsHeart />
+          <ProductLike >
+            <BsHeart onClick={addToList}/>
             {/* <BsHeartFill /> */}
           </ProductLike>
         </ProductInfo>   
@@ -33,11 +49,13 @@ const Container = styled.div`
 const ProductItem = styled(Link)`
   background-color: #FFE4E1;
   height: 200px;
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
   padding: 20px;
   text-align: center;
+  transition: .3s ease-in-out;
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    opacity: .5;
   }
   text-decoration: none;
 `;
@@ -51,7 +69,7 @@ const ProductInfo = styled.div`
   display: flex;
   font-size: 20px;
   background-color: white;
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px;
   justify-content: space-between;
   padding: 20px;
 `;
