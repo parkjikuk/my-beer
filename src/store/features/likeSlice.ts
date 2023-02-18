@@ -3,17 +3,19 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 
 export interface Like{
-  id: number;
+  id: string;
   image: string;
   name: string;
 }
 
 interface LikeState {
-  likeItems: Like[]
+  likeItems: Like[];
+  isLoading: boolean;
 }
 
 const initialState: LikeState = {
   likeItems: [],
+  isLoading: false,
 }
 
 export const getUserLikedBeers = createAsyncThunk<Like[], void, { state: RootState }>(
@@ -31,9 +33,14 @@ export const LikeSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getUserLikedBeers.fulfilled, (state, action) => {
-      state.likeItems = action.payload;
-    })
+    builder
+      .addCase(getUserLikedBeers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getUserLikedBeers.fulfilled, (state, action) => {
+        state.likeItems = action.payload;
+        state.isLoading = false;
+      })
   },
 });
 
