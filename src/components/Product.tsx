@@ -6,7 +6,12 @@ import { ProductItems } from '../store/features/productSlice';
 import { useAppSelector } from '../store/store';
 import axios from 'axios';
 
-function Product({data} : {data: ProductItems}) {
+interface ProductProps {
+  data: ProductItems;
+  isLiked?: boolean;
+}
+
+function Product({data, isLiked = false}: ProductProps) {
   const email = useAppSelector((state) => state.auth.email);
 
   const addToList = async () => {
@@ -29,8 +34,7 @@ function Product({data} : {data: ProductItems}) {
         <ProductInfo>
           <ProductTitle>{data.name}</ProductTitle>
           <ProductLike >
-            <BsHeart onClick={addToList}/>
-            {/* <BsHeartFill /> */}
+            { isLiked ?  <BsHeartFill /> : <BsHeart onClick={addToList}/>}
           </ProductLike>
         </ProductInfo>   
     </Container>
@@ -81,6 +85,7 @@ const ProductTitle = styled.div`
 
 const ProductLike = styled.div`
   font-size: 25px;
+  cursor: pointer;
   &:hover {
     color: red;
   }
