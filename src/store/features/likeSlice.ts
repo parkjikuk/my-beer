@@ -28,6 +28,18 @@ export const getUserLikedBeers = createAsyncThunk<Like[], void, { state: RootSta
   }
 );
 
+export const removeBeerFromList = createAsyncThunk<Like[], string, { state: RootState }>(
+  "beer/removeLiked",
+  async (beerId, thunkAPI) => {
+    const email = thunkAPI.getState().auth.email;
+    const { data: { beers }} = await axios.put("http://localhost:5000/api/user/remove", {
+      email,
+      beerId,
+    });
+    return beers;
+  }
+)
+
 export const LikeSlice = createSlice({
   name: "like",
   initialState,
@@ -40,6 +52,9 @@ export const LikeSlice = createSlice({
       .addCase(getUserLikedBeers.fulfilled, (state, action) => {
         state.likeItems = action.payload;
         state.isLoading = false;
+      })
+      .addCase(removeBeerFromList.fulfilled, (state, action) => {
+        state.likeItems = action.payload;
       })
   },
 });

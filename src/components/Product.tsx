@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { Link } from "react-router-dom";
 import { ProductItems } from '../store/features/productSlice';
-import { useAppSelector } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/store';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { removeBeerFromList } from '../store/features/likeSlice';
 
 interface ProductProps {
   data: ProductItems;
@@ -13,6 +15,7 @@ interface ProductProps {
 
 function Product({data, isLiked = false}: ProductProps) {
   const email = useAppSelector((state) => state.auth.email);
+  const dispatch = useAppDispatch();
 
   const addToList = async () => {
     try {
@@ -20,8 +23,9 @@ function Product({data, isLiked = false}: ProductProps) {
         email,
         data,
       });
+      toast.success(`${data.name} 맥주가 추가되었습니다.`)
     } catch (error) {
-      console.log(error);
+      toast.error("내 맥주함에 추가하지 못하였습니다.")
     }
   };
 
@@ -34,7 +38,7 @@ function Product({data, isLiked = false}: ProductProps) {
         <ProductInfo>
           <ProductTitle>{data.name}</ProductTitle>
           <ProductLike >
-            { isLiked ?  <BsHeartFill /> : <BsHeart onClick={addToList}/>}
+            { isLiked ?  <StyledHeartIcon onClick={() => dispatch(removeBeerFromList(data.id))}/> : <BsHeart onClick={addToList}/>}
           </ProductLike>
         </ProductInfo>   
     </Container>
@@ -88,6 +92,13 @@ const ProductLike = styled.div`
   cursor: pointer;
   &:hover {
     color: red;
+  }
+`;
+
+const StyledHeartIcon = styled(BsHeartFill)`
+  fill: #ECA29F;
+  &:hover {
+    fill: black;
   }
 `;
 
