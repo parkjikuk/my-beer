@@ -1,15 +1,17 @@
 import io, { Socket } from "socket.io-client";
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { ChatMessage, fetchChatMessages} from "../store/features/chatSlice";
+import { ChatMessage, fetchChatMessages, postMessage} from "../store/features/chatSlice";
+import styled, {css} from 'styled-components';
 
 interface ChatProps {
   roomId: string;
 }
 
 function Chat({ roomId } : ChatProps) {
+  const dispatch = useAppDispatch();
   const chatMessages  = useAppSelector((state) => state.chat.chatMessages);
-  const userName = useAppSelector((state) => state.auth.userName);
+  const {userName , email} = useAppSelector((state) => state.auth);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [inputMessage, setInputMessage] = useState<string>("");
   const socketRef = useRef<Socket>();
@@ -23,6 +25,7 @@ function Chat({ roomId } : ChatProps) {
       console.log(`Socket disconnected: ${socketRef.current?.id}`);
     });
     socketRef.current.emit("join room", roomId);
+    dispatch(fetchChatMessages(roomId));
 
     return () => {
       socketRef.current?.disconnect();
@@ -39,31 +42,63 @@ function Chat({ roomId } : ChatProps) {
     if (inputMessage.trim() !== "") {
       const newMessage: ChatMessage = {
         id: "",
-        userName: userName ?? null,
+        userName: userName ?? "",
         message: inputMessage,
         roomId: roomId,
+        email: email ?? "",
+        myMessage: true,
       };
       socketRef.current?.emit("send message", newMessage);
-      setInputMessage("");
+      dispatch(postMessage(newMessage)).then(() => {
+        setInputMessage("");
+      })
     }
   }, [inputMessage, roomId, userName]);
 
   return (
-    <div>
-      <div>
+    <Container>
+      <MessageInfo>
         {chatMessages.map((message) => (
-          <div key={message.id}>
-            <span>{ message.userName ?? "Anonymous"}:</span> {message.message}
+          <StyledChatMessage  key={message.id} myMessage={message.myMessage}>
+          <div>
+            <strong>{message.userName ?? 'Anonymous'}</strong>
           </div>
+          <MessageContent>{message.message}</MessageContent>
+        </StyledChatMessage>
         ))}
         <div ref={messagesEndRef} />
-      </div>
+      </MessageInfo>
       <form onSubmit={handleSubmit}>
         <input type="text" value={inputMessage} onChange={handleInputChange} />
         <button type="submit">Send</button>
       </form>
-    </div>
+    </Container>
   );
 };
+
+const StyledChatMessage  = styled.div<{ myMessage: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: ${({ myMessage }) => (myMessage ? 'flex-end' : 'flex-start')};
+  margin-bottom: 8px;
+`;
+
+const MessageContent = styled.div`
+background: #A9CEC2;
+padding: 5px;
+border-radius: 5px;
+`;
+
+const Container = styled.div`
+width: 30%;
+background-color: #2A2A2A;
+border-radius: 5px;
+padding: 20px;
+`;
+
+const MessageInfo = styled.div`
+overflow: auto;
+height: 60vh;
+`;
 
 export default Chat;
