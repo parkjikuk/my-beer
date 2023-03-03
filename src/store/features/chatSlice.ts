@@ -31,8 +31,8 @@ export const fetchChatMessages = createAsyncThunk<ChatMessage[], string, { state
       ...message,
       myMessage: message.email === email,
     }));
-    console.log(messages);
-    return messages;
+    const reverse = messages.slice().reverse();
+    return reverse;
   }
 );
 
@@ -63,6 +63,9 @@ export const chatSlice = createSlice({
       state.isLoading = true;
     })
     .addCase(postMessage.fulfilled, (state, action) => {
+      if (state.chatMessages.length === 10) {
+        state.chatMessages.splice(0, 1);
+      }
       state.chatMessages.push(action.payload);
     })
   },
