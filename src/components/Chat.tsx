@@ -15,7 +15,7 @@ function Chat({ roomId } : ChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [inputMessage, setInputMessage] = useState<string>("");
   const socketRef = useRef<Socket>();
-
+  
   useEffect(() => {
     socketRef.current = io("http://localhost:5000");
     socketRef.current.on("connect", () => {
@@ -25,6 +25,7 @@ function Chat({ roomId } : ChatProps) {
       console.log(`Socket disconnected: ${socketRef.current?.id}`);
     });
     socketRef.current.emit("join room", roomId);
+    
     dispatch(fetchChatMessages(roomId));
 
     return () => {
@@ -32,6 +33,10 @@ function Chat({ roomId } : ChatProps) {
       socketRef.current?.emit("leave room", roomId);
     }
   }, [roomId]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages]);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setInputMessage(e.target.value);
@@ -57,48 +62,94 @@ function Chat({ roomId } : ChatProps) {
 
   return (
     <Container>
-      <MessageInfo>
+      <MessageInfo >
         {chatMessages.map((message) => (
           <StyledChatMessage  key={message.id} myMessage={message.myMessage}>
           <div>
-            <strong>{message.userName ?? 'Anonymous'}</strong>
+            <MessageUserName>{message.userName}</MessageUserName>
           </div>
           <MessageContent>{message.message}</MessageContent>
         </StyledChatMessage>
         ))}
         <div ref={messagesEndRef} />
       </MessageInfo>
-      <form onSubmit={handleSubmit}>
-        <input type="text" value={inputMessage} onChange={handleInputChange} />
-        <button type="submit">Send</button>
-      </form>
+      <MessageForm onSubmit={handleSubmit}>
+        <MessageInput placeholder="메세지를 입력해주세요" type="text" value={inputMessage} onChange={handleInputChange} />
+        <MessageBtn type="submit">보내기</MessageBtn>
+      </MessageForm>
     </Container>
   );
 };
+
+const Container = styled.div`
+  width: 30%;
+  background-color: #2A2A2A;
+  border-radius: 5px;
+  height: 100%;
+  overflow: auto;
+  margin-top: 20px;
+`;
 
 const StyledChatMessage  = styled.div<{ myMessage: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: ${({ myMessage }) => (myMessage ? 'flex-end' : 'flex-start')};
   margin-bottom: 8px;
+  height: auto;
+`;
+
+const MessageUserName = styled.strong`
+color: white;
 `;
 
 const MessageContent = styled.div`
 background: #A9CEC2;
 padding: 5px;
 border-radius: 5px;
-`;
-
-const Container = styled.div`
-width: 30%;
-background-color: #2A2A2A;
-border-radius: 5px;
-padding: 20px;
+max-width: 50%;
 `;
 
 const MessageInfo = styled.div`
-overflow: auto;
-height: 60vh;
+max-height: 700px;
+height: 700px;
+overflow-y: scroll;
+padding: 10px;
+&::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.5);
+}
+&::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+}
+`;
+
+const MessageForm = styled.form`
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+margin-top: 20px;
+margin-bottom: 10px;
+`;
+
+const MessageInput = styled.input`
+flex: 1;
+padding: 10px;
+border-radius: 5px;
+border: none;
+margin: 0 10px;
+outline: none;
+`;
+
+const MessageBtn = styled.button`
+background-color: #70878D;
+padding: 10px;
+border-radius: 5px;
+border: none;
+margin-right: 10px;
 `;
 
 export default Chat;
