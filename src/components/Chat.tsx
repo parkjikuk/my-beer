@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { ChatMessage, fetchChatMessages, postMessage} from "../store/features/chatSlice";
 import styled, {css} from 'styled-components';
+import Loading from "./Loading";
 
 interface ChatProps {
   roomId: string;
@@ -11,13 +12,14 @@ interface ChatProps {
 function Chat({ roomId } : ChatProps) {
   const dispatch = useAppDispatch();
   const chatMessages  = useAppSelector((state) => state.chat.chatMessages);
-  const {userName , email} = useAppSelector((state) => state.auth);
+  const {userName , email, authenticated} = useAppSelector((state) => state.auth);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [inputMessage, setInputMessage] = useState<string>("");
   const socketRef = useRef<Socket>();
-  
+  const isLoading = useAppSelector((state) => state.chat.isLoading);
+
   useEffect(() => {
-    socketRef.current = io("http://localhost:5000");
+    socketRef.current = io("https://port-0-my-beer-6g2llezz4y2v.sel3.cloudtype.app");
     socketRef.current.on("connect", () => {
       console.log(`Socket connected: ${socketRef.current?.id}`);
     });
@@ -61,41 +63,46 @@ function Chat({ roomId } : ChatProps) {
   }, [inputMessage, roomId, userName]);
 
   return (
-    <Container>
-      <MessageInfo >
-        {chatMessages.map((message) => (
-          <StyledChatMessage  key={message.id} myMessage={message.myMessage}>
-          <div>
-            <MessageUserName>{message.userName}</MessageUserName>
-          </div>
-          <MessageContent>{message.message}</MessageContent>
-        </StyledChatMessage>
-        ))}
-        <div ref={messagesEndRef} />
-      </MessageInfo>
-      <MessageForm onSubmit={handleSubmit}>
-        <MessageInput placeholder="메세지를 입력해주세요" type="text" value={inputMessage} onChange={handleInputChange} />
-        <MessageBtn type="submit">보내기</MessageBtn>
-      </MessageForm>
-    </Container>
+    <>
+      {isLoading ? <Loading /> : (
+        <Container>
+        <MessageInfo >
+          {chatMessages.map((message) => (
+            <StyledChatMessage  key={message.id} myMessage={message.myMessage}>
+            <div>
+              <MessageUserName>{message.userName}</MessageUserName>
+            </div>
+            <MessageContent>{message.message}</MessageContent>
+          </StyledChatMessage>
+          ))}
+          <div ref={messagesEndRef} />
+        </MessageInfo>
+        <MessageForm onSubmit={handleSubmit}>
+          <MessageInput placeholder="메세지를 입력해주세요" type="text" value={inputMessage} onChange={handleInputChange} />
+          <MessageBtn type="submit">보내기</MessageBtn>
+        </MessageForm>
+      </Container>
+      )}
+    </>
   );
 };
 
 const Container = styled.div`
   width: 30%;
+  height: 100%;
   background-color: #2A2A2A;
   border-radius: 5px;
-  height: 100%;
   overflow: auto;
-  margin-top: 20px;
+  margin-top: 15px;
 `;
 
 const StyledChatMessage  = styled.div<{ myMessage: boolean }>`
   display: flex;
   flex-direction: column;
+  align-self: flex-start;
   align-items: ${({ myMessage }) => (myMessage ? 'flex-end' : 'flex-start')};
   margin-bottom: 8px;
-  height: auto;
+  height: 100%;
 `;
 
 const MessageUserName = styled.strong`
@@ -110,8 +117,9 @@ max-width: 50%;
 `;
 
 const MessageInfo = styled.div`
-max-height: 700px;
-height: 700px;
+height: 100%;
+min-height: 755px;
+max-height: 755px;
 overflow-y: scroll;
 padding: 10px;
 &::-webkit-scrollbar {
@@ -133,6 +141,7 @@ justify-content: space-between;
 width: 100%;
 margin-top: 20px;
 margin-bottom: 10px;
+height: 100%;
 `;
 
 const MessageInput = styled.input`
@@ -142,6 +151,7 @@ border-radius: 5px;
 border: none;
 margin: 0 10px;
 outline: none;
+background-color: ${props => props.disabled && "#e0e0e0"};
 `;
 
 const MessageBtn = styled.button`
@@ -150,6 +160,10 @@ padding: 10px;
 border-radius: 5px;
 border: none;
 margin-right: 10px;
+cursor: pointer;
+&:hover {
+  background-color: #3e8e41;
+}
 `;
 
 export default Chat;

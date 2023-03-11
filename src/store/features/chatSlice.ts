@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 export interface ChatMessage {
   id: string;
   userName?: string;
@@ -26,7 +28,7 @@ export const fetchChatMessages = createAsyncThunk<ChatMessage[], string, { state
   "chat/fetchChatMessages",
   async (roomId: string, thunkAPI) => {
     const email = thunkAPI.getState().auth.email;
-    const response = await axios.get<ChatMessage[]>( `http://localhost:5000/api/chat/${roomId}/messages`);
+    const response = await axios.get<ChatMessage[]>( `${apiUrl}/api/chat/${roomId}/messages`);
     const messages: ChatMessage[] = response.data.map((message) => ({
       ...message,
       myMessage: message.email === email,
@@ -39,7 +41,7 @@ export const fetchChatMessages = createAsyncThunk<ChatMessage[], string, { state
 export const postMessage = createAsyncThunk(
   "chat/postMessage",
   async ({ roomId, userName, message, email, myMessage }: ChatMessage) => {
-    const response = await axios.post(`http://localhost:5000/api/chat/${roomId}/messages`, {
+    const response = await axios.post(`${apiUrl}/api/chat/${roomId}/messages`, {
       userName,
       message,
       email,
@@ -56,11 +58,11 @@ export const chatSlice = createSlice({
   extraReducers: (builder) => {
     builder
     .addCase(fetchChatMessages.pending, (state, action) => {
-      state.isLoading = false;
+      state.isLoading = true;
     })
     .addCase(fetchChatMessages.fulfilled, (state, action) => {
       state.chatMessages = action.payload;
-      state.isLoading = true;
+      state.isLoading = false;
     })
     .addCase(postMessage.fulfilled, (state, action) => {
       if (state.chatMessages.length === 10) {
