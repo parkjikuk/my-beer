@@ -2,6 +2,8 @@ import { RootState } from './../store';
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 export interface Like{
   id: string;
   image: string;
@@ -22,7 +24,7 @@ export const getUserLikedBeers = createAsyncThunk<Like[], void, { state: RootSta
   "beer/getLiked",
   async (_, thunkAPI) => {
     const email = thunkAPI.getState().auth.email;
-    const { data: { beers } } = await axios.get(`http://localhost:5000/api/user/liked/${email}`);
+    const { data: { beers } } = await axios.get(`${apiUrl}/api/user/liked/${email}`);
     console.log(beers)
     return beers;
   }
@@ -32,7 +34,7 @@ export const removeBeerFromList = createAsyncThunk<Like[], string, { state: Root
   "beer/removeLiked",
   async (beerId, thunkAPI) => {
     const email = thunkAPI.getState().auth.email;
-    const { data: { beers }} = await axios.put("http://localhost:5000/api/user/remove", {
+    const { data: { beers }} = await axios.put(`${apiUrl}/api/user/remove`, {
       email,
       beerId,
     });
