@@ -3,15 +3,17 @@ import styled from 'styled-components';
 import { Link, useNavigate } from "react-router-dom";
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { firebaseAuth } from '../firebase/firebase';
-import { useAppDispatch, useAppSeletor } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/store';
 import { authSlice } from '../store/features/authSlice';
 import { toast } from 'react-toastify';
-
+import { AiOutlineMenu } from "react-icons/ai";
 
 function Header() {
   const dispatch = useAppDispatch();
-  const isLoggedIn = useAppSeletor((state) => state.auth.authenticated);
+  const isLoggedIn = useAppSelector((state) => state.auth.authenticated);
   const [displayName, setDisplayName] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,10 +52,9 @@ function Header() {
     }
   }, [dispatch]);
 
-  const logoutHanlder = () => {
+  const logoutHandler = () => {
     signOut(firebaseAuth).then(() => {
-      toast.success("로그아웃 하셨습니다.");
-      navigate("/");
+      navigate("/login");
     }).catch((error) => {
       toast.error(error.message)
     })
@@ -65,17 +66,20 @@ function Header() {
       <Link to={`/`}>
         <Logo src="https://i.ibb.co/nQCJHJq/Free-Sample-By-Wix-11zon-removebg-preview.png" alt="logo" />
       </Link>
-      <SearchIput type="text" />
-      <NavList>
+      <NavList menuOpen={menuOpen}>
         {isLoggedIn ? 
         <>
-        <NavItem as="a" href="/like">찜 맥주</NavItem>
-        <NavItem as="a" href="/profile">프로필</NavItem>
-        <NavItem as="a" href="/login" onClick={logoutHanlder}>로그아웃</NavItem> 
         <UserName>{displayName} 님!</UserName>
+        <NavItem as="a" href="/like">찜 맥주</NavItem>
+        <NavItem as="a" href="/login" onClick={logoutHandler}>로그아웃</NavItem> 
         </>
         : <NavItem as="a" href="/login">로그인</NavItem>}
       </NavList>
+      <ButtonWrapper>
+        <Button onClick={() => setMenuOpen(!menuOpen)}>
+          <AiOutlineMenu />
+        </Button>
+      </ButtonWrapper>
     </Block>
   );
 }
@@ -89,29 +93,51 @@ const Block = styled.header`
   position: sticky;
   top: 0;
   z-index: 1;
-  justify-content: space-evenly;
+  justify-content:  space-between;
 `;
 
 const Logo = styled.img`
 width: 160px;
 object-fit: contain;
-margin: 0 10px;
+@media (max-width: 768px) {
+  margin-left: 10px;
+}
 `;
 
-const SearchIput = styled.input`
-  width: 400px;
-  height: 40px;
-  border-radius: 15px;
-  border: 0;
-  outline: 0;
-  font-size: 15px;
-  font-weight: 700;
-  padding-left: 20px;
+const ButtonWrapper = styled.div`
+@media (min-width: 769px) {
+  display: none;
+}
 `;
 
-const NavList = styled.ul`
-  display: flex;
-  align-itmes: center;
+const Button = styled.button`
+border: none;
+outline: none;
+cursor: pointer;
+font-size: 20px;
+margin-right: 20px;
+background-color: transparent;
+`;
+
+const NavList = styled.ul<{ menuOpen: boolean }>`
+display: flex;
+justify-content: space-between;
+align-items: center;
+list-style-type: none;
+margin: 0;
+padding: 0;
+
+@media (max-width: 768px) {
+  flex-direction: column;
+  position: absolute;
+  justify-content: center;
+  top: 70px;
+  right: ${({ menuOpen }) => (menuOpen ? '0' : '-100%')};
+  width: 100%;
+  height: ${({ menuOpen }) => (menuOpen ? '15vh' : '0')};
+  background-color: white;
+  transition: all 0.1s ease-in-out;
+}
 `;
 
 const NavItem = styled.li`
@@ -133,6 +159,12 @@ padding: 8px;
 background-color: white;
 border-radius: 10px;
 font-weight: 700;
+
+@media (max-width: 768px) {
+  width: 90%;
+  border-bottom: 1px solid #333;
+  border-radius: 0;
+}
 `;
 
 
