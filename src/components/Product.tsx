@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { BsHeart, BsHeartFill } from 'react-icons/bs';
 import { Link } from "react-router-dom";
@@ -7,32 +7,46 @@ import { useAppDispatch, useAppSelector } from '../store/store';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { removeBeerFromList } from '../store/features/likeSlice';
+import Modal from './Modal';
 
 interface ProductProps {
   data: ProductItems;
   isLiked?: boolean;
 }
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 function Product({data, isLiked = false}: ProductProps) {
+  const auth = useAppSelector((state) => state.auth.authenticated);
   const email = useAppSelector((state) => state.auth.email);
+  const [ModalOpen, setModalOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   const addToList = async () => {
+    if(!auth) {
+      setModalOpen(true);
+      return;
+    }
+    
     try {
-      await axios.post("http://localhost:5000/api/user/add", {
+      await axios.post(`${apiUrl}/api/user/add`, {
         email,
         data,
       });
       toast.success(`${data.name} 맥주가 추가되었습니다.`)
-    } catch (error) {
-      toast.error("내 맥주함에 추가하지 못하였습니다.")
+    } catch (error: any) {
+      toast.error(`${error.response.data.msg}`);
     }
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
   };
 
 
   return (
     <Container>
-        <ProductItem to={`/detail`}>
+        <ProductItem to={`/detail/${data.id}`}>
           <ProductImg src={data.image}/>
         </ProductItem>
         <ProductInfo>
@@ -40,7 +54,10 @@ function Product({data, isLiked = false}: ProductProps) {
           <ProductLike >
             { isLiked ?  <StyledHeartIcon onClick={() => dispatch(removeBeerFromList(data.id))}/> : <BsHeart onClick={addToList}/>}
           </ProductLike>
-        </ProductInfo>   
+        </ProductInfo>
+        {ModalOpen && (
+          <Modal onClose={closeModal}/>
+        )}   
     </Container>
   );
 }
@@ -85,6 +102,12 @@ const ProductInfo = styled.div`
 const ProductTitle = styled.div`
   font-weight: 700;
   color: black;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 const ProductLike = styled.div`
