@@ -8,6 +8,8 @@ export interface Like{
   id: string;
   image: string;
   name: string;
+  origin: string;
+  description: string;
 }
 
 interface LikeState {

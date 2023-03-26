@@ -10,25 +10,18 @@ export interface ProductItems{
   id: string;
   image: string;
   name: string;
+  origin: string;
+  description: string;
 }
 
 interface ProductState {
   data: ProductItems[];
-  searchQuery: string;
-  searchResults: ProductItems[];
+  isLoading: boolean;
 }
 
 const initialState: ProductState = {
   data: [],
-  searchQuery: "",
-  searchResults: [],
-}
-
-export const updateSearchQuery = (query: string) => {
-  return {
-    type: 'productSlice/updateSearchQuery',
-    payload: query
-  }
+  isLoading: false,
 }
 
 export const fetchData = createAsyncThunk(
@@ -38,21 +31,7 @@ export const fetchData = createAsyncThunk(
     const items: ProductItems[] = [];
     querySnapshot.forEach((doc) => {
       const beerData = doc.data();
-      items.push({id: doc.id, image: beerData.image, name:beerData.name})
-    })
-    return items;
-  }
-)
-
-export const fetchSearchResults = createAsyncThunk(
-  'productSlice/fetchSearchResults',
-  async (searchQuery: string) => {
-    const q = query(productRef, where("name", ">=", searchQuery));
-    const querySnapshot = await getDocs(q);
-    const items: ProductItems[] = [];
-    querySnapshot.forEach((doc) => {
-      const beerData = doc.data();
-      items.push({ id: doc.id, image: beerData.image, name: beerData.name })
+      items.push({id: doc.id, image: beerData.image, name:beerData.name, origin: beerData.origin, description: beerData.description})
     })
     return items;
   }
@@ -61,15 +40,16 @@ export const fetchSearchResults = createAsyncThunk(
 const productSlice = createSlice({
   name: 'beer',
   initialState,
-  reducers: {
-    setSearchResults: (state, action) => {
-      state.searchResults = action.payload;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchData.fulfilled, (state, action: PayloadAction<ProductItems[]>) => {
-      state.data = action.payload;
-    })
+    builder
+      .addCase(fetchData.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchData.fulfilled, (state, action: PayloadAction<ProductItems[]>) => {
+        state.data = action.payload;
+        state.isLoading = false;
+      })
   }
 })
 
