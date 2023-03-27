@@ -88,7 +88,7 @@ function Chat({ roomId } : ChatProps) {
 };
 
 const Container = styled.div`
-  width: 30%;
+  width: 100%;
   height: 100%;
   background-color: #2A2A2A;
   border-radius: 5px;

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface AuthState {
   email?: string | null;
-  authenticated?: boolean | null;
+  authenticated?: boolean;
   userName?: string | null;
   userID?: string | null;
 }

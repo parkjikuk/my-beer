@@ -45,7 +45,7 @@ background-size: cover;
 
 const Wrapper = styled.div<panelActive>`
 background-color: #e9e9e9;
-height: 420px;
+height: 450px;
 max-width: 750px;
 border-radius: 10px;
 position: relative;
