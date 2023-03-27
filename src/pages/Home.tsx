@@ -1,26 +1,32 @@
 import React, { useEffect} from 'react';
 import Product from '../components/Product';
 import { fetchData, ProductItems } from '../store/features/productSlice';
-import { useAppDispatch, useAppSeletor } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/store';
 import styled from 'styled-components';
+import Loading from '../components/Loading';
 
 
 function Home () {
+  const { data, isLoading } = useAppSelector((state) => state.beer);
   const dispatch = useAppDispatch();
-  const beers = useAppSeletor((state) => state.beer.data);
   
   useEffect(() => {
     dispatch(fetchData());
     
   }, [dispatch]);
 
-  console.log(beers);
+
+
   return (
-    <Container>
-      {beers.map((item: ProductItems) => {
-        return <Product data={item} key={item.name}/>
-      })}
-    </Container>
+    <>
+      {isLoading ? <Loading /> : (
+        <Container>
+        {data.map((item: ProductItems) => {
+          return <Product data={item} key={item.id} />;
+        })}
+      </Container>
+      )}
+    </>
   );
 }
 
@@ -31,7 +37,11 @@ grid-template-columns: 2fr 2fr 2fr 2fr;
 grid-template-rows: 3fr 3fr 3fr;
 width: 100%;
 height: 100%;
-background-color: #ECA29F;
+background: linear-gradient(to right, #ff9a9e, #fad0c4);
+
+@media (max-width: 768px) {
+  grid-template-columns: 1fr;
+}
 `;
 
 
