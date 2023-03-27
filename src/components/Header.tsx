@@ -83,7 +83,10 @@ function Header() {
         : <NavItem as="a" href="/login">로그인</NavItem>}
       </NavList>
       <ButtonWrapper>
-        <Button onClick={() => setMenuOpen(!menuOpen)}>
+        <Button onClick={() => {
+          setMenuOpen(!menuOpen);
+          setMenuVisible(true);
+          }}>
           <AiOutlineMenu />
         </Button>
       </ButtonWrapper>
@@ -110,6 +113,11 @@ const NavTitle = styled(Link)`
   color: #fff;
   text-decoration: none;
   margin-left: 100px;
+
+  @media (max-width: 768px) {
+    margin-left: 30px;
+    font-size: 20px;
+  }
 `;
 
 const ButtonWrapper = styled.div`
@@ -135,19 +143,19 @@ const NavList = styled.ul<{ menuOpen: boolean }>`
   margin: 0;
   padding: 0;
 
-
   @media (max-width: 768px) {
     flex-direction: column;
-    position: absolute;
+    position: fixed;
     justify-content: center;
     top: 70px;
-    right: ${({ menuOpen }) => (menuOpen ? '0' : '-100%')};
+    left: ${({ menuOpen }) => (menuOpen ? '0' : '-101%')};
     width: 100%;
-    height: ${({ menuOpen }) => (menuOpen ? '15vh' : '0')};
+    height: ${({ menuOpen }) => (menuOpen ? 'auto' : '0')};
     background-color: white;
     transition: all 0.1s ease-in-out;
   }
 `;
+
 
 const ToggleMenu = styled.div`
   position:absolute;
@@ -155,6 +163,13 @@ const ToggleMenu = styled.div`
   background-color: white;
   width: 100px;
   padding: 5px;
+
+  @media (max-width: 769px) {
+    display: block;
+    width: 100%;
+    top: 0;
+    padding-left: 0;
+  }
 `;
 
 const NavItem = styled.li`
@@ -172,6 +187,7 @@ const NavItem = styled.li`
 `;
 
 const UserName = styled.div`
+@media (min-width: 769px) {
   font-size: 20px;
   padding: 8px;
   background-color: white;
@@ -183,16 +199,11 @@ const UserName = styled.div`
     border-radius: 20px;
     padding: 8px;
   }
-  
-  @media (max-width: 768px) {
-    width: 90%;
-    border-bottom: 1px solid #333;
-    border-radius: 0;
-    }
-  `;
+}
 
-
-
-
+@media (max-width: 768px) {
+  display: none;
+}
+`;
 
 export default Header;
