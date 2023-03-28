@@ -142,6 +142,7 @@ const NavList = styled.ul<{ menuOpen: boolean }>`
   list-style-type: none;
   margin: 0;
   padding: 0;
+  margin-right: 100px;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -160,7 +161,7 @@ const NavList = styled.ul<{ menuOpen: boolean }>`
 const ToggleMenu = styled.div`
   position:absolute;
   top: 70px;
-  background-color: white;
+  background-color: #3B3E47;
   width: 100px;
   padding: 5px;
 
@@ -179,8 +180,8 @@ const NavItem = styled.li`
   font-weight: 700;
   list-style: none;
   text-decoration: none;
-  color: black;
   padding: 10px;
+  color: white;
   &:hover {
     color: #677381;
   }
@@ -194,7 +195,7 @@ const UserName = styled.div`
   border-radius: 10px;
   font-weight: 700;
   cursor: pointer;
-  margin-right: 100px;
+  color: black;
   &:hover {
     border-radius: 20px;
     padding: 8px;

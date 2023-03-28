@@ -110,10 +110,11 @@ color: white;
 `;
 
 const MessageContent = styled.div`
-background: #A9CEC2;
+background-color: #A9CEC2;
 padding: 5px;
 border-radius: 5px;
 max-width: 50%;
+margin-top: 5px;
 `;
 
 const MessageInfo = styled.div`
@@ -125,10 +126,10 @@ padding: 10px;
 &::-webkit-scrollbar {
   width: 10px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 &::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 6px;
 }
 `;
