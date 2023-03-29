@@ -23,6 +23,9 @@ function Chat({ roomId } : ChatProps) {
     socketRef.current.on("connect", () => {
       console.log(`Socket connected: ${socketRef.current?.id}`);
     });
+    socketRef.current?.on("receive message", (message: ChatMessage) => {
+      dispatch(postMessage(message));
+    });
     socketRef.current.on("disconnect", () => {
       console.log(`Socket disconnected: ${socketRef.current?.id}`);
     });
@@ -34,7 +37,7 @@ function Chat({ roomId } : ChatProps) {
       socketRef.current?.disconnect();
       socketRef.current?.emit("leave room", roomId);
     }
-  }, [roomId]);
+  }, [roomId, dispatch]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
