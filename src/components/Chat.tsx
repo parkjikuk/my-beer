@@ -16,8 +16,7 @@ function Chat({ roomId } : ChatProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [inputMessage, setInputMessage] = useState<string>("");
   const socketRef = useRef<Socket>();
-  const isLoading = useAppSelector((state) => state.chat.isLoading);
-
+  const isLoading = useAppSelector((state) => state.chat.isLoading)
 
   useEffect(() => {
     socketRef.current = io("https://port-0-my-beer-6g2llezz4y2v.sel3.cloudtype.app");
@@ -63,8 +62,9 @@ function Chat({ roomId } : ChatProps) {
         email: email ?? "",
         myMessage: false,
       };
-      const isMyMessage = newMessage.email === email;
-      newMessage.myMessage = isMyMessage;
+
+      newMessage.myMessage = newMessage.email ? newMessage.email === email : newMessage.userName === userName;
+
       socketRef.current?.emit("send message", newMessage, () => {
         setInputMessage("");
       });
