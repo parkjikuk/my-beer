@@ -18,14 +18,18 @@ function Chat({ roomId } : ChatProps) {
   const socketRef = useRef<Socket>();
   const isLoading = useAppSelector((state) => state.chat.isLoading);
 
+  const receiveMessage = useCallback((message: ChatMessage) => {
+    dispatch(postMessage(message));
+  }, [dispatch]);
+
   useEffect(() => {
     socketRef.current = io("https://port-0-my-beer-6g2llezz4y2v.sel3.cloudtype.app");
     socketRef.current.on("connect", () => {
       console.log(`Socket connected: ${socketRef.current?.id}`);
     });
-    socketRef.current?.on("receive message", (message: ChatMessage) => {
-      dispatch(postMessage(message));
-    });
+    if (!socketRef.current?.hasListeners("receive message")) {
+      socketRef.current?.on("receive message", receiveMessage);
+    }
     socketRef.current.on("disconnect", () => {
       console.log(`Socket disconnected: ${socketRef.current?.id}`);
     });
@@ -37,7 +41,7 @@ function Chat({ roomId } : ChatProps) {
       socketRef.current?.disconnect();
       socketRef.current?.emit("leave room", roomId);
     }
-  }, [roomId, dispatch]);
+  }, [roomId, receiveMessage]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -59,9 +63,8 @@ function Chat({ roomId } : ChatProps) {
         myMessage: true,
       };
       socketRef.current?.emit("send message", newMessage);
-      dispatch(postMessage(newMessage)).then(() => {
+        receiveMessage(newMessage);
         setInputMessage("");
-      })
     }
   }, [inputMessage, roomId, userName]);
 
