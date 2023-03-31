@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
@@ -7,10 +7,10 @@ import { useAppSelector } from '../store/store';
 
 function Detail() {
   const { id } = useParams();
-  const products = useAppSelector((state) => state.beer.data);
-  const product = products.find((product) => product.id === id);
+  const { data, isLoading } = useAppSelector((state) => state.beer);
+  const product = data.find((product) => product.id === id);
 
-  if(!product) {
+  if(isLoading || !product) {
     return <div>Loading...</div>;
   }
 

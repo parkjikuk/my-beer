@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Detail from './pages/Detail';
 import Home from './pages/Home';
@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
     <>
-    <HashRouter>
+    <BrowserRouter>
     <ToastContainer />
     <Header />
       <Routes>
@@ -20,7 +20,7 @@ function App() {
         <Route path="/like" element={<Like />} />
         <Route path="/detail/:id" element={<Detail />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
     </>
   );
 }
