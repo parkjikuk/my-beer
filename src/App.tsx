@@ -14,14 +14,16 @@ function App() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
+    const handleUnload = () => {
       dispatch(authSlice.actions.logout());
     };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
+  
+    window.addEventListener("unload", handleUnload);
+    window.addEventListener("pagehide", handleUnload);
+  
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("unload", handleUnload);
+      window.removeEventListener("pagehide", handleUnload);
     };
   }, [dispatch]);
 
