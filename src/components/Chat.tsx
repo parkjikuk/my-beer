@@ -63,9 +63,8 @@ function Chat({ roomId } : ChatProps) {
         email: email ?? "",
         myMessage: true,
       };
-      socketRef.current?.emit("send message", newMessage, () => {
-        setInputMessage("");
-      });
+      socketRef.current?.emit("send message", newMessage);
+      setInputMessage("");
     }
   }, [inputMessage, roomId, userName]);
 
