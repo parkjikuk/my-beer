@@ -9,15 +9,19 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAppDispatch } from './store/store';
 import { authSlice } from './store/features/authSlice';
+import { signOut } from 'firebase/auth';
+import { firebaseAuth } from './firebase/firebase';
 
 function App() {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const handleUnload = () => {
-      dispatch(authSlice.actions.logout());
-    };
+  const handleUnload = () => {
+    signOut(firebaseAuth).then(() => {
+      localStorage.removeItem('loggedInUser');
+    }).catch((error) => {
+      console.error(error);
+    });
+  };
   
+  useEffect(() => {
     window.addEventListener("unload", handleUnload);
     window.addEventListener("pagehide", handleUnload);
   
@@ -25,7 +29,7 @@ function App() {
       window.removeEventListener("unload", handleUnload);
       window.removeEventListener("pagehide", handleUnload);
     };
-  }, [dispatch]);
+  }, []);
 
   return (
     <>
