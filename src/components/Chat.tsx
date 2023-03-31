@@ -30,6 +30,7 @@ function Chat({ roomId } : ChatProps) {
     
     if (!socketRef.current?.hasListeners("receive message")) {
       socketRef.current?.on("receive message", (message: ChatMessage) => {
+        message.myMessage = message.email ? message.email === email : message.userName === userName;
         dispatch(postMessage(message));
       });
     }
@@ -64,7 +65,6 @@ function Chat({ roomId } : ChatProps) {
       };
 
       newMessage.myMessage = newMessage.email ? newMessage.email === email : false;
-
       socketRef.current?.emit("send message", newMessage, () => {
         setInputMessage("");
       });
