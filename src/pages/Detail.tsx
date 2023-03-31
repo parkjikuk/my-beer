@@ -3,15 +3,22 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Chat from '../components/Chat';
-import { useAppSelector } from '../store/store';
+import { useAppDispatch, useAppSelector } from '../store/store';
+import { fetchData } from '../store/features/productSlice';
+import Loading from '../components/Loading';
 
 function Detail() {
   const { id } = useParams();
-  const { data, isLoading } = useAppSelector((state) => state.beer);
+  const { data } = useAppSelector((state) => state.beer);
   const product = data.find((product) => product.id === id);
+  const dispatch = useAppDispatch();
 
-  if(isLoading || !product) {
-    return <div>Loading...</div>;
+  useEffect(() => {
+    dispatch(fetchData());
+  }, [dispatch])
+
+  if(!product) {
+    return <Loading />;
   }
 
   return (
