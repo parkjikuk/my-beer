@@ -63,7 +63,7 @@ function Chat({ roomId } : ChatProps) {
         myMessage: false,
       };
 
-      newMessage.myMessage = newMessage.email ? newMessage.email === email : newMessage.userName === userName;
+      newMessage.myMessage = newMessage.email ? newMessage.email === email : false;
 
       socketRef.current?.emit("send message", newMessage, () => {
         setInputMessage("");
