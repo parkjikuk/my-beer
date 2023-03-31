@@ -9,7 +9,7 @@ import Loading from '../components/Loading';
 
 function Detail() {
   const { id } = useParams();
-  const { data } = useAppSelector((state) => state.beer);
+  const { data, isLoading } = useAppSelector((state) => state.beer);
   const product = data.find((product) => product.id === id);
   const dispatch = useAppDispatch();
 
@@ -17,20 +17,20 @@ function Detail() {
     dispatch(fetchData());
   }, [dispatch])
 
-  if(!product) {
-    return <Loading />;
-  }
-
   return (
     <Container>
-      <BeerInfo>
-        <BeerImg src={product.image} />
-        <BeerName>{product.name}</BeerName>
-        <BeerOrigin>{product.origin}</BeerOrigin>
-        <BeerDescription>{product.description}</BeerDescription>
-      </BeerInfo>
+      {product && !isLoading ? (
+        <BeerInfo>
+          <BeerImg src={product.image} />
+          <BeerName>{product.name}</BeerName>
+          <BeerOrigin>{product.origin}</BeerOrigin>
+          <BeerDescription>{product.description}</BeerDescription>
+        </BeerInfo>
+      ) : (
+      <Loading />
+      )}
       <ChatContainer>
-        <Chat roomId={product.name}/>
+        <Chat roomId={product ? product.name : ''} />
       </ChatContainer>
     </Container>
   );
