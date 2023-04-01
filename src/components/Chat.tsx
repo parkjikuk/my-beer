@@ -84,7 +84,13 @@ function Chat({ roomId } : ChatProps) {
           <div ref={messagesEndRef} />
         </MessageInfo>
         <MessageForm onSubmit={handleSubmit}>
-          <MessageInput placeholder="메세지를 입력해주세요" type="text" value={inputMessage} onChange={handleInputChange} />
+          <MessageInput 
+            placeholder={authenticated ? "메세지를 입력해주세요" : "로그인하셔야 이용할 수 있습니다."} 
+            type="text" 
+            value={inputMessage} 
+            onChange={handleInputChange}
+            disabled={!authenticated}
+          />
           <MessageBtn type="submit">보내기</MessageBtn>
         </MessageForm>
       </Container>
