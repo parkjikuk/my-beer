@@ -29,7 +29,6 @@ function Signin({panelActive}: panelActive) {
         userID: user.uid,
       }))
       toast.success("로그인 하셨습니다.");
-      console.log(user);
       navigate("/");
     })
     .catch((error) => {

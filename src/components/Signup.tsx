@@ -86,7 +86,6 @@ function Signup({panelActive}: panelActive) {
         firebaseAuth.signOut();
         toast.success('회원가입에 성공하셨습니다.')
         window.location.replace("/login");
-        console.log(user);
       })
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {
@@ -101,7 +100,6 @@ function Signup({panelActive}: panelActive) {
     setFormValues({...formValues, [e.target.name]: e.target.value});
   }
 
-  console.log(formValues);
   return (
     <Container panelActive={panelActive}>
       <Form onSubmit={handleSignUp}>

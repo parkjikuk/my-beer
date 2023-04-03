@@ -43,7 +43,6 @@ function Header() {
     const storedUser = localStorage.getItem('loggedInUser');
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      console.log(user)
       setDisplayName(user.displayName);
       dispatch(authSlice.actions.login({
         email: user.email,

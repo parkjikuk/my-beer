@@ -27,7 +27,6 @@ export const getUserLikedBeers = createAsyncThunk<Like[], void, { state: RootSta
   async (_, thunkAPI) => {
     const email = thunkAPI.getState().auth.email;
     const { data: { beers } } = await axios.get(`${apiUrl}/api/user/liked/${email}`);
-    console.log(beers)
     return beers;
   }
 );
