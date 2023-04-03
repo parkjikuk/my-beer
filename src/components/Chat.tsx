@@ -2,7 +2,7 @@ import io, { Socket } from "socket.io-client";
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { ChatMessage, fetchChatMessages, postMessage} from "../store/features/chatSlice";
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 import Loading from "./Loading";
 
 interface ChatProps {
@@ -30,7 +30,7 @@ function Chat({ roomId } : ChatProps) {
     
     if (!socketRef.current?.hasListeners("receive message")) {
       socketRef.current?.on("receive message", (message: ChatMessage) => {
-        message.myMessage = message.email ? message.email === email : message.userName === userName;
+        message.myMessage = message.email === email;
         dispatch(postMessage(message));
       });
     }
