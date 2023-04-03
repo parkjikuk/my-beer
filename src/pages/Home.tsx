@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import { useEffect } from 'react';
 import Product from '../components/Product';
 import { fetchData, ProductItems } from '../store/features/productSlice';
 import { useAppDispatch, useAppSelector } from '../store/store';

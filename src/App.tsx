@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Detail from './pages/Detail';
 import Home from './pages/Home';
 import Like from './pages/Like';
 import Login from './pages/Login';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAppDispatch } from './store/store';
-import { authSlice } from './store/features/authSlice';
 import { signOut } from 'firebase/auth';
 import { firebaseAuth } from './firebase/firebase';
 

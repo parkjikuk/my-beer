@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Chat from '../components/Chat';
 import { useAppDispatch, useAppSelector } from '../store/store';
