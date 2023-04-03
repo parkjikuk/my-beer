@@ -76,7 +76,6 @@ function Signup({panelActive}: panelActive) {
   const handleSignUp = async(e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    
       const { email, password, name } = formValues;
       await createUserWithEmailAndPassword(firebaseAuth, email, password)
       .then((userCredential) => {
@@ -90,7 +89,11 @@ function Signup({panelActive}: panelActive) {
         console.log(user);
       })
       .catch((error) => {
-        toast.error(error.message);
+        if (error.code === "auth/email-already-in-use") {
+          toast.error("이미 사용 중인 이메일입니다.");
+        } else {
+          toast.error(error.message);
+        }
       })
   }
 
