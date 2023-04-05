@@ -41,7 +41,7 @@
 <br><br>
 
 
-<div align=center><h2>🛠 배포 및 프로젝트 정리</h2></div>
+<div align=center><h2>🛠 배포</h2></div>
 
 ### firebase Hosting을 이용하여 클라이언트를 배포 하였습니다.
  [홈페이지 바로가기](<https://mybeer-78002.web.app/>) 
