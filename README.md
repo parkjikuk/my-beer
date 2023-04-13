@@ -44,3 +44,8 @@
 
 ### firebase Hosting을 이용하여 클라이언트를 배포 하였습니다.
  [홈페이지 바로가기](<https://mybeer-78002.web.app/>) 
+ 
+ 테스트용 계정
+ id: test@test.com
+ 비밀번호: qweqwe123
+ 
