@@ -49,7 +49,7 @@
  비밀번호: qweqwe123
  
 ### 프로젝트를 하면서 겪은 문제에 대해서 작성하였습니다.
- [정리 블로그](<https://velog.io/@paxkk/mybeer-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%9D%B4%EC%8A%88-%EB%AA%A8%EC%9D%8C>) 
+ [블로그](<https://velog.io/@paxkk/mybeer-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%9D%B4%EC%8A%88-%EB%AA%A8%EC%9D%8C>) 
  
 
  
